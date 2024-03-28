@@ -11,9 +11,15 @@ on:
             type: string
             default: ${{ github.repository }}
       outputs:
-        imageid: ${{ jobs.build.outputs.imageid }}
-        digest: ${{ jobs.build.outputs.digest }}
-        metadata: ${{ jobs.build.outputs.metadata }}
+        imageid:
+          description: 'The image ID of the built image'
+          value: ${{ jobs.build.outputs.imageid }}
+        digest:
+          description: 'The digest of the built image'
+          value: ${{ jobs.build.outputs.digest }}
+        metadata:
+          description: 'The metadata of the built image'
+          value: ${{ jobs.build.outputs.metadata }}
 
 permissions:
   contents: read
