@@ -1,4 +1,4 @@
-name: Build artifact
+name: Build Artifact
 
 on:
   workflow_call:
@@ -15,10 +15,15 @@ on:
         description: "Context to build the image from"
         type: string
         default: "."
-      export-dir:
-        description: "Directory to export the artifact to"
+      name:
+        description: "Name of the artifact"
         type: string
-        default: "."
+        required: true
+      version:
+        description: "Version of the artifact"
+        type: string
+        required: true
+      
 
 permissions:
   contents: read
@@ -27,10 +32,12 @@ env:
   REGISTRY: ${{ inputs.registry }}
 
 jobs:
-  generate-clients:
+  release-artifact:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: 'true'
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3.2.0
@@ -39,5 +46,13 @@ jobs:
         run: |
           docker buildx build \
             --file ${{ inputs.dockerfile }} \
-            --output type=local,dest=${{ inputs.export-dir }} \
+            -e NAME=${{ inputs.name }} \
+            -e VERSION=${{ inputs.version }} \
+            --output type=local,dest=./output \
             ${{ inputs.context }}
+       
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.name }}-${{ inputs.version }}-${{ github.run_id }}
+          path: ./output
