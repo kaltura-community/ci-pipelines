@@ -1,0 +1,43 @@
+name: Build artifact
+
+on:
+  workflow_dispatch:
+    inputs:
+      registry:
+        description: "Registry to push the image to"
+        type: string
+        default: "ghcr.io"
+      dockerfile:
+        description: "Dockerfile to build the image from"
+        type: string
+        default: "Dockerfile"
+      context:
+        description: "Context to build the image from"
+        type: string
+        default: "."
+      export-dir:
+        description: "Directory to export the artifact to"
+        type: string
+        default: "."
+
+permissions:
+  contents: read
+
+env:
+  REGISTRY: ${{ inputs.registry }}
+
+jobs:
+  generate-clients:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3.2.0
+
+      - name: Build
+        run: |
+          docker buildx build \
+            --file ${{ inputs.dockerfile }} \
+            --output type=local,dest=${{ inputs.export-dir }} \
+            ${{ inputs.context }}
