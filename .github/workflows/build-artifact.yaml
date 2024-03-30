@@ -46,8 +46,8 @@ jobs:
         run: |
           docker buildx build \
             --file ${{ inputs.dockerfile }} \
-            -e NAME=${{ inputs.name }} \
-            -e VERSION=${{ inputs.version }} \
+            --build-arg NAME=${{ inputs.name }} \
+            --build-arg VERSION=${{ inputs.version }} \
             --output type=local,dest=./output \
             ${{ inputs.context }}
        
