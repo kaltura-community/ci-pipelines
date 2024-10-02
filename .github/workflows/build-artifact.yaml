@@ -50,10 +50,8 @@ jobs:
             --build-arg VERSION=${{ inputs.version }} \
             --output type=local,dest=./output \
             ${{ inputs.context }}
-          ls -alh ./output
 
-      # - name: Upload Artifact
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: ${{ inputs.name }}-${{ inputs.version }}-${{ github.run_id }}
-      #     path: ./output
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./output/*
