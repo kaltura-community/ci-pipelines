@@ -4,26 +4,26 @@ on:
   workflow_call:
     inputs:
       registry:
-        description: "Registry to push the image to"
+        description: Registry to push the image to
         type: string
-        default: "ghcr.io"
+        default: ghcr.io
       dockerfile:
-        description: "Dockerfile to build the image from"
+        description: Dockerfile to build the image from
         type: string
-        default: "Dockerfile"
+        default: Dockerfile
       context:
-        description: "Context to build the image from"
+        description: Context to build the image from
         type: string
-        default: "."
+        default: .
       name:
-        description: "Name of the artifact"
+        description: Name of the artifact
         type: string
         required: true
       version:
-        description: "Version of the artifact"
+        description: Version of the artifact
         type: string
         required: true
-      
+
 
 permissions:
   contents: read
@@ -50,9 +50,10 @@ jobs:
             --build-arg VERSION=${{ inputs.version }} \
             --output type=local,dest=./output \
             ${{ inputs.context }}
-       
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ inputs.name }}-${{ inputs.version }}-${{ github.run_id }}
-          path: ./output
+          ls -alh ./output
+
+      # - name: Upload Artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: ${{ inputs.name }}-${{ inputs.version }}-${{ github.run_id }}
+      #     path: ./output
